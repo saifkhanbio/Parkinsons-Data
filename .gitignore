@@ -1,0 +1,36 @@
+# Allow only reviewed source and documentation by default.
+*
+!*/
+!*.py
+!*.R
+!*.sh
+!*.md
+!requirements*.txt
+!.gitignore
+!config/private_config.example.json
+
+# Local data, credentials, installed dependencies and generated analysis outputs.
+private/
+incoming/
+download/
+outputs/
+models/
+selectors/
+dependencies/
+R-library/
+vendor/
+__pycache__/
+.cache/
+.venv/
+venv/
+.env
+.env.*
+*private_config.json
+*RESULTS.md
+*REPORT.md
+run.log
+
+# Existing tracked supplementary archive is preserved; do not add new archives.
+*.zip
+*.gz
+*.tar

@@ -1,0 +1,15 @@
+# Versions observed in the analysis Python environment. Select an appropriate CUDA build of PyTorch.
+numpy==1.26.4
+pandas==2.3.1
+scipy==1.13.1
+scikit-learn==1.6.1
+torch==2.8.0
+matplotlib==3.9.4
+seaborn==0.13.2
+joblib==1.5.1
+threadpoolctl==3.6.0
+requests==2.32.4
+networkx==3.2.1
+pillow==11.3.0
+statsmodels==0.14.5
+psutil==7.0.0

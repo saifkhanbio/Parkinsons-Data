@@ -1,0 +1,15 @@
+script <- sub("^--file=","",grep("^--file=",commandArgs(),value=TRUE)[1])
+out <- dirname(normalizePath(script))
+analysis <- file.path(dirname(out),"ppmi-deseq2-2026-09-12")
+selected <- read.delim(file.path(out,"selected_pathways.tsv"))
+old <- readRDS(file.path(analysis,"msigdb_hallmark_gobp.rds"))
+c2 <- readRDS(file.path(analysis,"c2_c5bp/C2_gene_sets.rds"))
+stopifnot(identical(unique(old$db_version),unique(c2$db_version)))
+pairs <- unique(rbind(old[,c("gs_name","ensembl_gene")],c2[,c("gs_name","ensembl_gene")]))
+pairs <- pairs[pairs$gs_name%in%selected$pathway & !is.na(pairs$ensembl_gene) & nzchar(pairs$ensembl_gene),]
+sets <- lapply(split(pairs$ensembl_gene,pairs$gs_name),unique)
+stopifnot(length(sets)==51,identical(sort(names(sets)),sort(selected$pathway)))
+writeLines(vapply(names(sets),function(name)paste(c(name,name,sort(sets[[name]])),collapse="\t"),character(1)),
+           file.path(out,"selected_pathways_original_definitions.gmt"))
+write.table(pairs,file.path(out,"pathway_membership.tsv"),sep="\t",quote=FALSE,row.names=FALSE)
+cat("Exported original definitions for",length(sets),"selected pathways.\n")

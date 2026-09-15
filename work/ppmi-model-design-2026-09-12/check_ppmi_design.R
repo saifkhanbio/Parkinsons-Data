@@ -1,0 +1,28 @@
+suppressPackageStartupMessages(library(jsonlite))
+out <- 'outputs/ppmi-model-design-2026-09-12'
+d<-read.delim(file.path(out,'covariates.tsv'),stringsAsFactors=FALSE)
+d$group<-factor(d$group,levels=c('Control','PD'));d$sex<-factor(d$sex,levels=c('Female','Male'))
+d$phase<-factor(d$phase);d$batch<-factor(d$batch)
+d$age_c<-d$age_collection_years-mean(d$age_collection_years)
+d$RIN_c<-d$RIN-mean(d$RIN)
+d$intergenic_c<-d$intergenic_percent-mean(d$intergenic_percent)
+d$usable_c<-d$usable_percent-mean(d$usable_percent)
+forms<-list(primary=~batch+age_c+sex+RIN_c+intergenic_c+group,phase_sensitivity=~phase+age_c+sex+RIN_c+intergenic_c+group,usable_sensitivity=~batch+age_c+sex+RIN_c+usable_c+group)
+diagnostic<-function(f,data){
+ x<-model.matrix(f,data); z<-x[,apply(x,2,sd)>0,drop=FALSE]; z<-scale(z)
+ list(formula=paste(deparse(f),collapse=''),n=nrow(x),columns=ncol(x),rank=qr(x)$rank,full_rank=qr(x)$rank==ncol(x),residual_df=nrow(x)-qr(x)$rank,scaled_condition_number=kappa(cbind(1,z),exact=TRUE))
+}
+result<-lapply(forms,diagnostic,data=d)
+# Python writes True/False as strings; handle this explicitly.
+sens<-droplevels(d[tolower(as.character(d$medication_timing_sensitivity_exclude))=='false',])
+result$medication_timing_sensitivity<-diagnostic(forms$primary,sens)
+bt<-table(d$batch,d$group)
+result$batch_coverage<-list(batches=nrow(bt),both_groups=sum(rowSums(bt>0)==2),single_group=sum(rowSums(bt>0)==1),minimum_batch_size=min(rowSums(bt)),maximum_batch_size=max(rowSums(bt)))
+result$numeric_correlations<-cor(d[,c('age_collection_years','RIN','intergenic_percent','usable_percent','mapping_percent')])
+vifs<-sapply(c('age_c','RIN_c','intergenic_c','groupPD'),function(name){x<-model.matrix(forms$primary,d)[,-1]; y<-x[,name];others<-x[,colnames(x)!=name,drop=FALSE];1/(1-summary(lm(y~others))$r.squared)})
+result$selected_coefficient_VIF<-as.list(vifs)
+stopifnot(all(vapply(result[1:4],function(x)x$full_rank,logical(1))))
+write_json(result,file.path(out,'design_checks.json'),pretty=TRUE,auto_unbox=TRUE)
+saveRDS(list(colData=d,formulas=forms,primary_model_matrix=model.matrix(forms$primary,d),checks=result),file.path(out,'DESeq2_design.rds'))
+write.table(d,file.path(out,'DESeq2_colData.tsv'),sep='\t',row.names=FALSE,quote=FALSE)
+print(result)
