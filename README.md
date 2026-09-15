@@ -1,0 +1,1 @@
+The Zip file contains the supplementary material for the Manuscript: Whole-Blood Transcriptomics in Parkinson’s Disease: Immune–Metabolic Signatures, Cell Composition, and Pathway-Informed Classification
