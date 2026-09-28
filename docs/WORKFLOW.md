@@ -17,6 +17,11 @@ stages only after reconstructing their inputs and reviewing their source paths.
 9. Initial classifiers, repeated comparisons and revised solver: `ppmi-classifier`, `ppmi-classifier-refinement`, and `ppmi-classifier-refinement-retry`.
 10. Hallmark score and member-gene representations, followed by controlled algorithm, regularization, PCA and gene-selection comparisons.
 11. Feature-stability and two-gene covariate audits.
+12. Additional sensitivity and evidence audits: `ppmi-jdr-review-audit-2026-09-27`.
+    This stage depends on preserved batch metadata, classifier folds, primary and
+    site/race DE outputs, stability outputs and measured-cell models. Run its
+    aggregate audit, timing launcher and numeric finalizer in that order; see its
+    README for exact prerequisites. It preserves the original core analyses.
 
 ## Additional model-development modules
 
@@ -31,6 +36,7 @@ scripts. They are distinct from the fixed Hallmark-member comparison.
 
 | Directory | Analysis source files |
 | --- | --- |
+| [work/ppmi-jdr-review-audit-2026-09-27](../work/ppmi-jdr-review-audit-2026-09-27/README.md) | `audit.py`, `run_timing.py`, `timing_models.R`, `finalize_enrichment.R`, `finalize_timing.py` |
 | [work/ppmi-blood-cell-adjustment-2026-09-12](../work/ppmi-blood-cell-adjustment-2026-09-12/README.md) | `launch.py`, `run_models.R` |
 | [work/ppmi-blood-cell-timing-2026-09-12](../work/ppmi-blood-cell-timing-2026-09-12/README.md) | `compare_windows.py`, `launch.py`, `run_models.R` |
 | [work/ppmi-blood-counts-2026-09-12](../work/ppmi-blood-counts-2026-09-12/README.md) | `audit_blood_counts.py`, `freeze_approved_cohort.py` |

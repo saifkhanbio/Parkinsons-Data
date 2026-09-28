@@ -59,6 +59,12 @@ remain outside version control.
 
 ## Statistical safeguards in the source
 
+The additional [audit module](../work/ppmi-jdr-review-audit-2026-09-27/README.md)
+documents its private input filenames and execution sequence. Its timing
+launcher creates preflight files before fitting and uses `Rscript` on `PATH`.
+Two strata run concurrently with four DESeq2 workers each; fgsea runs serially.
+Pathway eligibility is checked against each model's actual ranked members.
+
 - Unique participant/sample alignment, finite non-negative integer counts,
   expression eligibility and full-rank design checks.
 - Raw-count DESeq2 inference with explicit contrast, filtering and convergence

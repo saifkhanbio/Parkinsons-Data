@@ -26,6 +26,12 @@ measured-cell adjustment, gene annotation and influence review, and controlled
 classifier comparisons. Additional modules cover demographic assessments,
 class weighting, stratified modeling, blood-cell covariates and calibration.
 
+The additional [sensitivity and evidence audit](work/ppmi-jdr-review-audit-2026-09-27/README.md)
+covers batch-confounding diagnostics, site/race effect and uncertainty comparisons,
+elastic-net stability verification, and disjoint CBC timing analyses with paired
+reference and measured-cell-adjusted DESeq2 models. This update adds source and
+execution documentation; generated audit outputs remain local.
+
 ## Quick check
 
 From the repository root, run:
